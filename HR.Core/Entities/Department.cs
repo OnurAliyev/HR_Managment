@@ -12,6 +12,7 @@ public class Department : IEntity
     public int EmployeeLimit { get; set; }
     public int EmployeeCount { get; set; }
     public string CompanyName { get; set; }
+    public Company Company { get; set; }
     public bool IsActive { get; set; } = true;
     public DateTime CreatedTime { get; set; }
     public Department(string name, string about, int employeeLimit, string companyName)
