@@ -11,10 +11,10 @@ public class Department : IEntity
     public string About { get; set; }
     public int EmployeeLimit { get; set; }
     public int EmployeeCount { get; set; }
-    public Company CompanyName { get; set; }
-    bool IsActive { get; set; } = true;
+    public string CompanyName { get; set; }
+    public bool IsActive { get; set; } = true;
     public DateTime CreatedTime { get; set; }
-    public Department(string name, string about, int employeeLimit, Company companyName)
+    public Department(string name, string about, int employeeLimit, string companyName)
     {
         Id = _id++;
         Name = name;

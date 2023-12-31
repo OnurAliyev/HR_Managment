@@ -7,7 +7,7 @@ public class Company : IEntity
     private static int _id;
     public string Name { get; set; }
     public string About { get; set; }
-    bool IsActive { get; set; } = true;
+    public bool IsActive { get; set; } = true;
     public DateTime CreatedTime { get; set; }
     public Company(string name, string about)
     {

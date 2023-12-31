@@ -19,7 +19,7 @@ internal class EmployeeService : IEmployeeServices
         throw new NotImplementedException();
     }
 
-    public void Create(string name, string surname, int age, string gender, string role, decimal salary)
+    public void Create(string employeeName, string employeeSurname, int age, string gender, string role, decimal salary)
     {
         throw new NotImplementedException();
     }

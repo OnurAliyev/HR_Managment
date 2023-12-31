@@ -4,11 +4,11 @@ namespace HR.Business.Interfaces;
 
 public interface ICompanyServices
 {
-    void Create(string name,string about);
-    void Activate(string name);
-    void Deactivate(string name);
-    void GetAllDepartmentsById(int id);
-    Company FindCompanyById(int id);
+    void Create(string companyName,string companyAbout);
+    void Activate(string companyName);
+    void Deactivate(string companyName);
+    void GetAllDepartments(string companyName);
+    Company? FindCompanyBy(string? companyName);
     void ShowAll();
 
 }
