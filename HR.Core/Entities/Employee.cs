@@ -11,14 +11,16 @@ public class Employee : IEntity
     public string? Gender { get; set; }
     public string? Role { get; set; }
     public decimal Salary { get; set; }
-    public Department Departmentİd { get; set; }
+    public int DepartmentId { get; set; }
+    public Department? Department { get; set; }
+    public Company? Company { get; set; }
 
     public DateTime CreatedTime { get; set; }
 
     private static int _id;
 
     public Employee(string? name, string? surname, int age, string? gender, string? role,
-        decimal salary,Department departmentId)
+        decimal salary,int departmentId)
     {
         Id = _id++;
         Name = name;
@@ -27,7 +29,7 @@ public class Employee : IEntity
         Gender = gender;
         Role = role;
         Salary = salary;
-        Departmentİd = departmentId;
+        DepartmentId = departmentId;
         CreatedTime = DateTime.Now;
     }
 

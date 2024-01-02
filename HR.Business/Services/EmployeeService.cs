@@ -1,36 +1,102 @@
 ﻿using HR.Business.Interfaces;
+using HR.Business.Utilities.Exceptions;
+using HR.Core.Entities;
+using HR.DataAcces.Contexts;
 
 namespace HR.Business.Services;
 
 internal class EmployeeService : IEmployeeServices
 {
-    public void ChangeDepartment(int departmentId, string newDepartmentName)
+    public IDepartmentServices? departmentService { get; }
+    public IEmployeeServices? employeeService { get; }
+    public EmployeeService()
     {
-        throw new NotImplementedException();
+        departmentService = new DepartmentService();
+    }
+    public void Create(string employeeName, string employeeSurname, int age, string gender, string role, decimal salary, int departmentId)
+    {
+        if (String.IsNullOrEmpty(employeeName)) throw new ArgumentNullException();
+        if (String.IsNullOrEmpty(employeeSurname)) throw new ArgumentNullException();
+        if (String.IsNullOrEmpty(gender)) throw new ArgumentNullException();
+        if (String.IsNullOrEmpty(role)) throw new ArgumentNullException();
+        if (age < 18) throw new MinAgeException("Employee should be over 18 years of age");
+        if (salary < 0 || salary < 300) throw new MinSalaryException("Employee salary should be minimum 300 USD");
+        Department? dbDepartment=
+            HRDbContext.Departments.Find(d=>d.Id==departmentId);
+        if (dbDepartment is null) throw new NotFoundException("Department is not found");
+        if (dbDepartment.EmployeeCount >= dbDepartment.EmployeeLimit)
+            throw new EmployeeLimitException($"{dbDepartment.Name.ToLower()} is already full");
+        Employee employee = new(employeeName, employeeSurname, age, gender, role, salary, departmentId);
+        employee.Department = dbDepartment;
+        employee.Company=dbDepartment.Company;
+        HRDbContext.Employees.Add(employee);
+        dbDepartment.EmployeeCount++;
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine($"Employee: {employee.Name} successfully created");
+        Console.ResetColor();
+    }
+    public void ChangeDepartment(int employeeId, int newDepartmentId)
+    {
+       Employee? dbEmployee=HRDbContext.Employees.Find(e=>e.Id==employeeId);
+        if (dbEmployee is null) throw new NotFoundException($"Employee ID: {employeeId} is not found");
+        dbEmployee.DepartmentId = newDepartmentId;
     }
 
     public void ChangeRole(int employeeId, string newRole)
     {
-        throw new NotImplementedException();
+        if (employeeId < 0) throw new ArgumentOutOfRangeException();
+        if (String.IsNullOrEmpty(newRole)) throw new ArgumentException();
+        Employee? dbEmployee=
+            HRDbContext.Employees.Find(e=> e.Id==employeeId);
+        if (dbEmployee is null) throw new NotFoundException("Employee is not found");
+        if (newRole == dbEmployee.Role) throw new AlreadyExistException($"Employee is already in {newRole} role");
+        dbEmployee.Role = newRole;
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine($"Employee role successfully changed to: {newRole}");
+        Console.ResetColor();
     }
 
     public void ChangeSalary(int employeeId, decimal newSalary)
     {
-        throw new NotImplementedException();
+        if(employeeId < 0)throw new ArgumentOutOfRangeException();
+        if (newSalary <= 0 || newSalary < 300) throw new MinSalaryException("Employee salary should be minimum 300 USD");
+        Employee? employee=HRDbContext.Employees.Find(e=> e.Id==employeeId);
+        if (employee is null) throw new NotFoundException("Employee cannot be found");
+        employee.Salary = newSalary;
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine($"Employee salary successfully changed to {newSalary}");
+        Console.ResetColor();
     }
 
-    public void Create(string employeeName, string employeeSurname, int age, string gender, string role, decimal salary)
-    {
-        throw new NotImplementedException();
-    }
 
     public void DeleteEmployee(int employeeId)
     {
-        throw new NotImplementedException();
+        if(employeeId < 0) throw new ArgumentOutOfRangeException();
+        Employee? dbEmployee=HRDbContext.Employees.Find(e=>e.Id==employeeId);
+        if (dbEmployee is null) throw new NotFoundException("Employee is not found");
+        HRDbContext.Employees.Remove(dbEmployee);
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine("Employee successfully deleted");
+        Console.ResetColor();
+        
     }
 
     public void ShowAll()
     {
-        throw new NotImplementedException();
+       foreach(var employee in HRDbContext.Employees)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"Employee ID: {employee.Id}\n" +
+                              $"Employee company: {employee.Company}\n" +
+                              $"Employee department: {employee.Department}\n" +
+                              $"Employee name:{employee.Name}\n+" +
+                              $"Employee suurname: {employee.Surname}\n+" +
+                              $"Employee age : {employee.Age}\n+" +
+                              $"Employee gender: {employee.Gender}\n" +
+                              $"Employee role: {employee.Role}\n" +
+                              $"Employee joined time: {employee.CreatedTime}");
+
+
+        }
     }
 }

@@ -7,7 +7,6 @@ namespace HR.Business.Services;
 
 public class DepartmentService : IDepartmentServices
 {
-    private IDepartmentServices? departmentService { get; }
     private ICompanyServices? companyService { get; }
     public DepartmentService()
     {
@@ -43,7 +42,7 @@ public class DepartmentService : IDepartmentServices
                                              $"Try another department please.");
         if (dbDepartment.EmployeeCount < dbDepartment.EmployeeLimit)
         {
-            employee.Departmentİd = dbDepartment;
+            employee.DepartmentId = dbDepartment.Id;
             dbDepartment.EmployeeCount++;
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Employee succesfully added");
@@ -77,19 +76,19 @@ public class DepartmentService : IDepartmentServices
     public void GetDepartmentEmployees(int departmentId)
     {
         if (departmentId < 0) throw new ArgumentOutOfRangeException();
-        Department? dbDepartmentId =
+        Department? dbDepartment =
             HRDbContext.Departments.Find(d => d.Id == departmentId);
-        if (dbDepartmentId is null) throw new NotFoundException($"Department ID: {departmentId} is not found");
-        if (dbDepartmentId is not null)
+        if (dbDepartment is null) throw new NotFoundException($"Department ID: {departmentId} is not found");
+        if (dbDepartment is not null)
         {
             foreach (var employees in HRDbContext.Employees)
             {
-                if (employees.Departmentİd == dbDepartmentId)
+                if (employees.DepartmentId == dbDepartment.Id)
                 {
                     Console.WriteLine($"Employee ID: {employees.Id}\n" +
                                       $"Employee name: {employees.Name}\n" +
                                       $"Employee surname: {employees.Surname}\n" +
-                                      $"Employee department: {employees.Departmentİd} {employees.Departmentİd.Name}\n" +
+                                      $"Employee department: {employees.DepartmentId} {employees.DepartmentId.Name}\n" +
                                       $"Employee age: {employees.Age}\n" +
                                       $"Employee gender: {employees.Gender}\n" +
                                       $"Employee salary: {employees.Salary}\n" +
