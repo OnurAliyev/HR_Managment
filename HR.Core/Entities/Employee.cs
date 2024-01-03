@@ -35,6 +35,6 @@ public class Employee : IEntity
 
     public override string ToString()
     {
-        return $"ID: {Id} || Full Name: {Name} {Surname} || Joined Time : {CreatedTime} \n ";
+        return $"ID: {Id} || Full Name: {Name} {Surname} || Joined Time : {CreatedTime}";
     }
 }

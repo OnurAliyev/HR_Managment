@@ -5,7 +5,7 @@ using HR.DataAcces.Contexts;
 
 namespace HR.Business.Services;
 
-internal class EmployeeService : IEmployeeServices
+public class EmployeeService : IEmployeeServices
 {
     public IDepartmentServices? departmentService { get; }
     public IEmployeeServices? employeeService { get; }
@@ -13,12 +13,12 @@ internal class EmployeeService : IEmployeeServices
     {
         departmentService = new DepartmentService();
     }
-    public void Create(string employeeName, string employeeSurname, int age, string gender, string role, decimal salary, int departmentId)
+    public void Create(string? employeeName, string? employeeSurname, int age, string? gender, string? role, decimal salary, int departmentId)
     {
-        if (String.IsNullOrEmpty(employeeName)) throw new ArgumentNullException();
-        if (String.IsNullOrEmpty(employeeSurname)) throw new ArgumentNullException();
-        if (String.IsNullOrEmpty(gender)) throw new ArgumentNullException();
-        if (String.IsNullOrEmpty(role)) throw new ArgumentNullException();
+        if (String.IsNullOrEmpty(employeeName)) throw new EmptyNameException("Employee name cannot be null or empty");
+        if (String.IsNullOrEmpty(employeeSurname)) throw new EmptyNameException("Employee surname cannot be null or empty");
+        if (String.IsNullOrEmpty(gender)) throw new EmptyNameException("Employee gender cannot be null or empty");
+        if (String.IsNullOrEmpty(role)) throw new EmptyNameException("Employee role cannot be null or empty");
         if (age < 18) throw new MinAgeException("Employee should be over 18 years of age");
         if (salary < 0 || salary < 300) throw new MinSalaryException("Employee salary should be minimum 300 USD");
         Department? dbDepartment=
@@ -32,7 +32,8 @@ internal class EmployeeService : IEmployeeServices
         HRDbContext.Employees.Add(employee);
         dbDepartment.EmployeeCount++;
         Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine($"Employee: {employee.Name} successfully created");
+        Console.WriteLine($"Employee: {employee.Name} {employee.Surname} successfully created\n"+
+                          $"And added to department with {employee.DepartmentId} ID and {employee.Department.Name} name");
         Console.ResetColor();
     }
     public void ChangeDepartment(int employeeId, int newDepartmentId)
@@ -42,7 +43,7 @@ internal class EmployeeService : IEmployeeServices
         dbEmployee.DepartmentId = newDepartmentId;
     }
 
-    public void ChangeRole(int employeeId, string newRole)
+    public void ChangeRole(int employeeId, string? newRole)
     {
         if (employeeId < 0) throw new ArgumentOutOfRangeException();
         if (String.IsNullOrEmpty(newRole)) throw new ArgumentException();
@@ -52,7 +53,7 @@ internal class EmployeeService : IEmployeeServices
         if (newRole == dbEmployee.Role) throw new AlreadyExistException($"Employee is already in {newRole} role");
         dbEmployee.Role = newRole;
         Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine($"Employee role successfully changed to: {newRole}");
+        Console.WriteLine($"Employee role successfully changed to: ^{newRole}^");
         Console.ResetColor();
     }
 
@@ -64,7 +65,7 @@ internal class EmployeeService : IEmployeeServices
         if (employee is null) throw new NotFoundException("Employee cannot be found");
         employee.Salary = newSalary;
         Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine($"Employee salary successfully changed to {newSalary}");
+        Console.WriteLine($"Employee salary successfully changed to ^{newSalary}^");
         Console.ResetColor();
     }
 
@@ -89,12 +90,13 @@ internal class EmployeeService : IEmployeeServices
             Console.WriteLine($"Employee ID: {employee.Id}\n" +
                               $"Employee company: {employee.Company}\n" +
                               $"Employee department: {employee.Department}\n" +
-                              $"Employee name:{employee.Name}\n+" +
-                              $"Employee suurname: {employee.Surname}\n+" +
-                              $"Employee age : {employee.Age}\n+" +
+                              $"Employee name:{employee.Name}\n" +
+                              $"Employee surname: {employee.Surname}\n" +
+                              $"Employee age : {employee.Age}\n" +
                               $"Employee gender: {employee.Gender}\n" +
                               $"Employee role: {employee.Role}\n" +
                               $"Employee joined time: {employee.CreatedTime}");
+            Console.ResetColor();
 
 
         }

@@ -18,6 +18,6 @@ public class Company : IEntity
     }
     public override string ToString()
     {
-        return $"ID: {Id} || Name: {Name} || Created Time : {CreatedTime} \n ";
+        return $"ID: {Id} || Name: {Name} || Created Time : {CreatedTime}";
     }
 }

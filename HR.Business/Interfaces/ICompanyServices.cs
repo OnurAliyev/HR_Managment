@@ -9,6 +9,7 @@ public interface ICompanyServices
     void Deactivate(string companyName);
     void GetAllDepartments(string companyName);
     Company? FindCompanyBy(string? companyName);
+    public bool CompanyExist();
     void ShowAll();
 
 }
