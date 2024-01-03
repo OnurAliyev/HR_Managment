@@ -95,10 +95,19 @@ public class EmployeeService : IEmployeeServices
                               $"Employee age : {employee.Age}\n" +
                               $"Employee gender: {employee.Gender}\n" +
                               $"Employee role: {employee.Role}\n" +
-                              $"Employee joined time: {employee.CreatedTime}");
+                              $"Employee joined time: {employee.CreatedTime}\n"+
+                              $" ");
             Console.ResetColor();
 
 
         }
+    }
+    public bool EmpExist()
+    {
+        foreach(var employees in HRDbContext.Employees)
+        {
+            if(employees.Id>=0) return true;
+        }
+        return false;
     }
 }

@@ -162,14 +162,7 @@ while (AppRun)
                     }
                     break;
                 case (int)Menu.ShowAllComp:
-                    if (companyService.CompanyExist() == false)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("There is no any created company");
-                        Console.ResetColor();
-                        goto case (int)Menu.CreateComp;
-                    }
-                    else
+                    if (companyService.CompanyExist() == true)
                     {
                         try
                         {
@@ -185,6 +178,14 @@ while (AppRun)
                             goto case (int)Menu.ShowAllComp;
                         }
                         break;
+
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("There is no any created company");
+                        Console.ResetColor();
+                        goto case (int)Menu.CreateComp;
                     }
                 case (int)Menu.CreateDep:
                     try
@@ -212,206 +213,267 @@ while (AppRun)
                     }
                     break;
                 case (int)Menu.AddEmployee:
-                    try
-                    {
-                        Console.ForegroundColor = ConsoleColor.DarkYellow;
-                        Console.WriteLine("All employees:");
-                        employeeService.ShowAll();
-                        Console.ResetColor();
-                        Console.Write("Enter employee ID: ");
-                        int employeeId = Convert.ToInt32(Console.ReadLine());
-                        Console.ForegroundColor= ConsoleColor.DarkYellow;
-                        Console.WriteLine("All departments: ");
-                        departmentService.ShowAllDepartments();
-                        Console.ResetColor();
-                        Console.Write("Enter department ID :");
-                        int departmentId= Convert.ToInt32(Console.ReadLine());
-                        departmentService.AddEmployee(employeeId, departmentId);
-
-                    }
-                    catch (Exception ex)
+                    if (employeeService.EmpExist() == false)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine(ex.Message);
+                        Console.WriteLine("There is no any employee created!");
                         Console.ResetColor();
-                        goto case (int)Menu.AddEmployee;
                     }
+                    else
+                    {
+                        try
+                        {
+                            Console.ForegroundColor = ConsoleColor.DarkYellow;
+                            Console.WriteLine("All employees:");
+                            employeeService.ShowAll();
+                            Console.ResetColor();
+                            Console.Write("Enter employee ID: ");
+                            int employeeId = Convert.ToInt32(Console.ReadLine());
+                            Console.ForegroundColor = ConsoleColor.DarkYellow;
+                            Console.WriteLine("All departments: ");
+                            departmentService.ShowAllDepartments();
+                            Console.ResetColor();
+                            Console.Write("Enter department ID :");
+                            int departmentId = Convert.ToInt32(Console.ReadLine());
+                            departmentService.AddEmployee(employeeId, departmentId);
+
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine(ex.Message);
+                            Console.ResetColor();
+                            goto case (int)Menu.AddEmployee;
+                        }
+                    }
+
                     break;
                 case (int)Menu.ShowEmpOfDep:
-                    try
-                    {
-                        Console.ForegroundColor = ConsoleColor.DarkYellow;
-                        Console.WriteLine("All departments: ");
-                        departmentService.ShowAllDepartments();
-                        Console.ResetColor();
-                        Console.Write("Enter department ID: ");
-                        int departmentId=Convert.ToInt32(Console.ReadLine());
-                        departmentService.GetDepartmentEmployees(departmentId);
-                    }
-                    catch(Exception ex)
+                    if (departmentService.DepExist() == false)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine(ex.Message);
+                        Console.WriteLine("There is no any departments created");
                         Console.ResetColor();
-                        goto case (int)Menu.ShowEmpOfDep;
+                    }
+                    else
+                    {
+                        try
+                        {
+                            Console.ForegroundColor = ConsoleColor.DarkYellow;
+                            Console.WriteLine("All departments: ");
+                            departmentService.ShowAllDepartments();
+                            Console.ResetColor();
+                            Console.Write("Enter department ID: ");
+                            int departmentId = Convert.ToInt32(Console.ReadLine());
+                            departmentService.GetDepartmentEmployees(departmentId);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine(ex.Message);
+                            Console.ResetColor();
+                            goto case (int)Menu.ShowEmpOfDep;
+                        }
                     }
                     break;
                 case (int)Menu.ActivateDep:
-                    try
-                    {
-                        Console.ForegroundColor = ConsoleColor.DarkYellow;
-                        Console.WriteLine("All departments: ");
-                        foreach(var department in HRDbContext.Departments) 
-                        {
-                            Console.ForegroundColor = ConsoleColor.Yellow;
-                            Console.WriteLine($"Department ID: {department.Id}\n" +
-                                              $"Department name: {department.Name}\n" +
-                                              $"Department company: {department.Company.Name}\n" +
-                                              $"Department employees: {department.EmployeeCount}\n" +
-                                              $"Department employee limit: {department.EmployeeLimit}\n" +
-                                              $"Department created time: {department.CreatedTime}\n" +
-                                              $"Department active status: {department.IsActive}\n"+
-                                              $" ");
-                            Console.ResetColor();
-                        }
-                        Console.ResetColor();
-                        Console.Write("Enter department ID: ");
-                        int departmentId = Convert.ToInt32(Console.ReadLine());
-                        departmentService.ActivateDepartment(departmentId);
-                    }
-                    catch(Exception ex)
+                    if (departmentService.DepExist() == false)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine(ex.Message);
+                        Console.WriteLine("There is no any department created!");
                         Console.ResetColor();
-                        goto case (int)Menu.ActivateDep;
+                    }
+                    else
+                    {
+                        try
+                        {
+                            Console.ForegroundColor = ConsoleColor.DarkYellow;
+                            Console.WriteLine("All departments: ");
+                            foreach (var department in HRDbContext.Departments)
+                            {
+                                Console.ForegroundColor = ConsoleColor.Yellow;
+                                Console.WriteLine($"Department ID: {department.Id}\n" +
+                                                  $"Department name: {department.Name}\n" +
+                                                  $"Department company: {department.Company.Name}\n" +
+                                                  $"Department employees: {department.EmployeeCount}\n" +
+                                                  $"Department employee limit: {department.EmployeeLimit}\n" +
+                                                  $"Department created time: {department.CreatedTime}\n" +
+                                                  $"Department active status: {department.IsActive}\n" +
+                                                  $" ");
+                                Console.ResetColor();
+                            }
+                            Console.ResetColor();
+                            Console.Write("Enter department ID: ");
+                            int departmentId = Convert.ToInt32(Console.ReadLine());
+                            departmentService.ActivateDepartment(departmentId);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine(ex.Message);
+                            Console.ResetColor();
+                            goto case (int)Menu.ActivateDep;
+                        }
                     }
                     break;
-                    case(int)Menu.DeactivateDep:
-                    try
-                    {
-                        Console.ForegroundColor = ConsoleColor.DarkYellow;
-                        Console.WriteLine("All departments: ");
-                        departmentService.ShowAllDepartments();
-                        Console.ResetColor();
-                        Console.Write("Enter department ID: ");
-                        int departmentId = Convert.ToInt32(Console.ReadLine());
-                        departmentService.DeactivateDepartment(departmentId);
-                    }
-                    catch (Exception ex)
+                case (int)Menu.DeactivateDep:
+                    if (departmentService.DepExist() == false)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine(ex.Message);
+                        Console.WriteLine("There is no any department created!");
                         Console.ResetColor();
-                        goto case (int)Menu.DeactivateDep;
+                    }
+                    else
+                    {
+                        try
+                        {
+                            Console.ForegroundColor = ConsoleColor.DarkYellow;
+                            Console.WriteLine("All departments: ");
+                            departmentService.ShowAllDepartments();
+                            Console.ResetColor();
+                            Console.Write("Enter department ID: ");
+                            int departmentId = Convert.ToInt32(Console.ReadLine());
+                            departmentService.DeactivateDepartment(departmentId);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine(ex.Message);
+                            Console.ResetColor();
+                            goto case (int)Menu.DeactivateDep;
+                        }
                     }
                     break;
                 case (int)Menu.UpdateDep:
-                    try
-                    {
-                        Console.ForegroundColor = ConsoleColor.DarkYellow;
-                        Console.WriteLine("All departments: ");
-                        departmentService.ShowAllDepartments();
-                        Console.ResetColor();
-                        Console.Write("Enter department ID: ");
-                        int departmentId = Convert.ToInt32(Console.ReadLine());
-                        Console.Write("Enter new department name: ");
-                        string? newDepartmentName= Console.ReadLine();
-                        Console.Write("Enter new department employee limit: ");
-                        int newEmployeeLimit= Convert.ToInt32(Console.ReadLine());
-                        departmentService.UpdateDepartment(newDepartmentName, newEmployeeLimit,departmentId);
-                    }
-                    catch(Exception ex)
+                    if (departmentService.DepExist() == false)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine(ex.Message);
+                        Console.WriteLine("There is no any department created!");
                         Console.ResetColor();
-                        goto case (int)Menu.UpdateDep;
+                    }
+                    else
+                    {
+                        try
+                        {
+                            Console.ForegroundColor = ConsoleColor.DarkYellow;
+                            Console.WriteLine("All departments: ");
+                            departmentService.ShowAllDepartments();
+                            Console.ResetColor();
+                            Console.Write("Enter department ID: ");
+                            int departmentId = Convert.ToInt32(Console.ReadLine());
+                            Console.Write("Enter new department name: ");
+                            string? newDepartmentName = Console.ReadLine();
+                            Console.Write("Enter new department employee limit: ");
+                            int newEmployeeLimit = Convert.ToInt32(Console.ReadLine());
+                            departmentService.UpdateDepartment(newDepartmentName, newEmployeeLimit, departmentId);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine(ex.Message);
+                            Console.ResetColor();
+                            goto case (int)Menu.UpdateDep;
+                        }
                     }
                     break;
                 case (int)Menu.ShowAllDep:
-                    if(departmentService.DepExist()==false)
+                    if (departmentService.DepExist() == false)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("There is no any created department");
                         Console.ResetColor();
                         goto case (int)Menu.CreateDep;
                     }
-                    else 
-                    { 
-                    try
+                    else
                     {
-                        Console.ForegroundColor = ConsoleColor.DarkYellow;
-                        Console.WriteLine("All departments: ");
-                        departmentService.ShowAllDepartments();
-                    }
-                    catch(Exception ex)
-                    {
-                        Console.ForegroundColor= ConsoleColor.Red;
-                        Console.WriteLine(ex.Message);
-                        Console.ResetColor();
-                        goto case (int)Menu.ShowAllDep;
-                    }
-                    break;
+                        try
+                        {
+                            Console.ForegroundColor = ConsoleColor.DarkYellow;
+                            Console.WriteLine("All departments: ");
+                            departmentService.ShowAllDepartments();
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine(ex.Message);
+                            Console.ResetColor();
+                            goto case (int)Menu.ShowAllDep;
+                        }
+                        break;
                     }
                 case (int)Menu.CreateEmp:
                     try
                     {
                         Console.Write("Enter employee name: ");
-                        string? employeeName=Console.ReadLine();
+                        string? employeeName = Console.ReadLine();
                         Console.Write("Enter employee surname: ");
-                        string? employeeSurname=Console.ReadLine();
+                        string? employeeSurname = Console.ReadLine();
                         Console.Write("Enter employee age: ");
-                        int employeeAge= Convert.ToInt32(Console.ReadLine());
+                        int employeeAge = Convert.ToInt32(Console.ReadLine());
                         Console.Write("Enter employee gender: ");
-                        string? gender=Console.ReadLine();
+                        string? gender = Console.ReadLine();
                         Console.Write("Enter employee role: ");
-                        string? role=Console.ReadLine();
+                        string? role = Console.ReadLine();
                         Console.Write("Enter employee salary: ");
-                        decimal salary= Convert.ToDecimal(Console.ReadLine());
+                        decimal salary = Convert.ToDecimal(Console.ReadLine());
                         Console.ForegroundColor = ConsoleColor.DarkYellow;
                         Console.WriteLine("All departments: ");
                         Console.ResetColor();
                         departmentService.ShowAllDepartments();
                         Console.Write("Enter department ID: ");
-                        int departmentId=Convert.ToInt32(Console.ReadLine());
-                        employeeService.Create(employeeName, employeeSurname, employeeAge,gender,role,salary,departmentId);
+                        int departmentId = Convert.ToInt32(Console.ReadLine());
+                        employeeService.Create(employeeName, employeeSurname, employeeAge, gender, role, salary, departmentId);
 
                     }
                     catch (Exception ex)
                     {
-                        Console.ForegroundColor=ConsoleColor.Red;
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine(ex.Message);
                         Console.ResetColor();
                         goto case (int)Menu.CreateEmp;
                     }
                     break;
                 case (int)Menu.ChangeEmpDep:
-                    try
+                    if (employeeService.EmpExist() == false)
                     {
-                        Console.ForegroundColor = ConsoleColor.DarkYellow;
-                        Console.WriteLine("All employees: ");
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("There is no any employee created!");
                         Console.ResetColor();
-                        employeeService.ShowAll();
-                        Console.Write("Enter employee ID: ");
-                        int employeeId=Convert.ToInt32(Console.ReadLine());
-                        Console.ForegroundColor = ConsoleColor.DarkYellow;
-                        Console.WriteLine("All departments: ");
-                        departmentService.ShowAllDepartments();
-                        Console.ResetColor();
-                        Console.Write("Enter new department ID: ");
-                        int newDepartmentId=Convert.ToInt32(Console.ReadLine());
-                        employeeService.ChangeDepartment(employeeId, newDepartmentId);
                     }
-                    catch(Exception ex)
+                    else
                     {
-                        Console.ForegroundColor= ConsoleColor.Red;
-                        Console.WriteLine(ex.Message);
-                        Console.ResetColor();
-                        goto case (int)Menu.ChangeEmpDep;
+                        try
+                        {
+                            Console.ForegroundColor = ConsoleColor.DarkYellow;
+                            Console.WriteLine("All employees: ");
+                            Console.ResetColor();
+                            employeeService.ShowAll();
+                            Console.Write("Enter employee ID: ");
+                            int employeeId = Convert.ToInt32(Console.ReadLine());
+                            Console.ForegroundColor = ConsoleColor.DarkYellow;
+                            Console.WriteLine("All departments: ");
+                            departmentService.ShowAllDepartments();
+                            Console.ResetColor();
+                            Console.Write("Enter new department ID: ");
+                            int newDepartmentId = Convert.ToInt32(Console.ReadLine());
+                            employeeService.ChangeDepartment(employeeId, newDepartmentId);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine(ex.Message);
+                            Console.ResetColor();
+                            goto case (int)Menu.ChangeEmpDep;
+                        }
                     }
                     break;
                 case (int)Menu.ChangeEmpR:
+                    if (employeeService.EmpExist() == false)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("There is no any employee created!");
+                        Console.ResetColor();
+                    }
                     try
                     {
                         Console.ForegroundColor = ConsoleColor.DarkYellow;
@@ -419,12 +481,12 @@ while (AppRun)
                         Console.ResetColor();
                         employeeService.ShowAll();
                         Console.Write("Enter employee ID: ");
-                        int employeeId= Convert.ToInt32(Console.ReadLine());
+                        int employeeId = Convert.ToInt32(Console.ReadLine());
                         Console.Write("Enter employee's new role: ");
-                        string? newRole= Console.ReadLine();
+                        string? newRole = Console.ReadLine();
                         employeeService.ChangeRole(employeeId, newRole);
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine(ex.Message);
@@ -433,51 +495,82 @@ while (AppRun)
                     }
                     break;
                 case (int)Menu.ChangeEmpSal:
-                    try
+                    if (employeeService.EmpExist() == false)
                     {
-                        Console.ForegroundColor = ConsoleColor.DarkYellow;
-                        Console.WriteLine("All employees: ");
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("There is no any employee created!");
                         Console.ResetColor();
-                        employeeService.ShowAll();
-                        Console.Write("Enter employee ID: ");
-                        int employeeId = Convert.ToInt32(Console.ReadLine());
-                        Console.Write("Enter employee's new salary: ");
-                        decimal newSalary = Convert.ToDecimal(Console.ReadLine());
-                        employeeService.ChangeSalary(employeeId, newSalary);
                     }
-                    catch(Exception ex)
+                    else
                     {
-                        Console.ForegroundColor=ConsoleColor.Red;
-                        Console.WriteLine(ex.Message);
-                        Console.ResetColor();
-                        goto case (int)Menu.ChangeEmpSal;
+                        try
+                        {
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Console.WriteLine("All employees: ");
+                            Console.ResetColor();
+                            employeeService.ShowAll();
+                            Console.Write("Enter employee ID: ");
+                            int employeeId = Convert.ToInt32(Console.ReadLine());
+                            Console.Write("Enter employee's new salary: ");
+                            decimal newSalary = Convert.ToDecimal(Console.ReadLine());
+                            employeeService.ChangeSalary(employeeId, newSalary);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine(ex.Message);
+                            Console.ResetColor();
+                            goto case (int)Menu.ChangeEmpSal;
+                        }
                     }
                     break;
                 case (int)Menu.DeleteEmp:
-                    try
+                    if (employeeService.EmpExist() == false)
                     {
-                        Console.ForegroundColor = ConsoleColor.DarkYellow;
-                        Console.WriteLine("All employees: ");
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("There is no any employee created!");
                         Console.ResetColor();
-                        employeeService.ShowAll();
-                        Console.Write("Enter employee ID: ");
-                        int employeeId = Convert.ToInt32(Console.ReadLine());
-                        employeeService.DeleteEmployee(employeeId);
                     }
-                    catch(Exception ex)
+                    else
                     {
-                        Console.ForegroundColor= ConsoleColor.Red;
-                        Console.WriteLine(ex.Message);
-                        Console.ResetColor();
-                        goto case (int)Menu.DeleteEmp;
+                        try
+                        {
+                            Console.ForegroundColor = ConsoleColor.DarkYellow;
+                            Console.WriteLine("All employees: ");
+                            Console.ResetColor();
+                            employeeService.ShowAll();
+                            Console.Write("Enter employee ID: ");
+                            int employeeId = Convert.ToInt32(Console.ReadLine());
+                            employeeService.DeleteEmployee(employeeId);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine(ex.Message);
+                            Console.ResetColor();
+                            goto case (int)Menu.DeleteEmp;
+                        }
                     }
                     break;
                 case (int)Menu.ShowAllEmp:
                     try
                     {
+                        if (employeeService.EmpExist() == false)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("There is no any employee created!");
+                            Console.ResetColor();
 
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.DarkYellow;
+                            Console.WriteLine("All employees:");
+                            Console.ResetColor();
+                            employeeService.ShowAll();
+                        }
                     }
-                    catch( Exception ex)
+                    catch (Exception ex)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine(ex.Message);

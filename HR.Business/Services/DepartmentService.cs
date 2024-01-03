@@ -169,7 +169,7 @@ public class DepartmentService : IDepartmentServices
     {
         foreach (var department in HRDbContext.Departments)
         {
-            if (department.IsActive == true)
+            if (department.IsActive == true && department.Id>=0)
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine($"Department ID: {department.Id}\n" +
@@ -185,9 +185,9 @@ public class DepartmentService : IDepartmentServices
     }
     public bool DepExist()
     {
-        foreach(var department in HRDbContext.Departments)
+        foreach (var department in HRDbContext.Departments)
         {
-            if(department.Id>=0 && department.IsActive==true)return true;
+            if (department.Id >= 0 && department.IsActive == true) return true;
         }
         return false;
     }
