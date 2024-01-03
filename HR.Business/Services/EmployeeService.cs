@@ -33,7 +33,7 @@ public class EmployeeService : IEmployeeServices
         dbDepartment.EmployeeCount++;
         Console.ForegroundColor = ConsoleColor.Green;
         Console.WriteLine($"Employee: {employee.Name} {employee.Surname} successfully created\n"+
-                          $"And added to department with {employee.DepartmentId} ID and {employee.Department.Name} name");
+                          $"And added to department ID: {employee.Department.Id} Name : {employee.Department.Name}");
         Console.ResetColor();
     }
     public void ChangeDepartment(int employeeId, int newDepartmentId)

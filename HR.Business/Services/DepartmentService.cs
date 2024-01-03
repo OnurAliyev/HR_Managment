@@ -116,6 +116,7 @@ public class DepartmentService : IDepartmentServices
             {
                 if (employees.DepartmentId == dbDepartment.Id)
                 {
+                    Console.ForegroundColor= ConsoleColor.Yellow;
                     Console.WriteLine($"Employee ID: {employees.Id}\n" +
                                       $"Employee name: {employees.Name}\n" +
                                       $"Employee surname: {employees.Surname}\n" +
@@ -126,6 +127,7 @@ public class DepartmentService : IDepartmentServices
                                       $"Employee salary: {employees.Salary}\n" +
                                       $"Employee role: {employees.Role}\n" +
                                       $"Employe joined time: {employees.CreatedTime}");
+                    Console.ResetColor();
 
                 }
             }

@@ -140,25 +140,35 @@ while (AppRun)
                         break;
                     }
                 case (int)Menu.ShowDepComp:
-                    try
-                    {
-                        Console.ForegroundColor = ConsoleColor.DarkYellow;
-                        Console.WriteLine("All companies :");
-                        companyService.ShowAll();
-                        Console.ResetColor();
-                        Console.Write("Enter company name: ");
-                        string? companyName = Console.ReadLine();
-                        Console.ForegroundColor = ConsoleColor.DarkGreen;
-                        companyService.GetAllDepartments(companyName);
-                        Console.ResetColor();
-
-                    }
-                    catch (Exception ex)
+                    if (departmentService.DepExist() == false)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine(ex.Message);
+                        Console.WriteLine("There is no any departments created!");
                         Console.ResetColor();
-                        goto case (int)Menu.ShowDepComp;
+                        goto case (int)Menu.CreateDep;
+                    }
+                    else
+                    {
+                        try
+                        {
+                            Console.ForegroundColor = ConsoleColor.DarkYellow;
+                            Console.WriteLine("All companies :");
+                            companyService.ShowAll();
+                            Console.ResetColor();
+                            Console.Write("Enter company name: ");
+                            string? companyName = Console.ReadLine();
+                            Console.ForegroundColor = ConsoleColor.DarkGreen;
+                            companyService.GetAllDepartments(companyName);
+                            Console.ResetColor();
+
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine(ex.Message);
+                            Console.ResetColor();
+                            goto case (int)Menu.ShowDepComp;
+                        }
                     }
                     break;
                 case (int)Menu.ShowAllComp:
@@ -188,28 +198,39 @@ while (AppRun)
                         goto case (int)Menu.CreateComp;
                     }
                 case (int)Menu.CreateDep:
-                    try
-                    {
-                        Console.Write("Enter department name: ");
-                        string? departmentName = Console.ReadLine();
-                        Console.WriteLine("Write about department:");
-                        string? departmentAbout = Console.ReadLine();
-                        Console.Write("Enter employee limit: ");
-                        int employeeLimit = Convert.ToInt32(Console.ReadLine());
-                        Console.ForegroundColor = ConsoleColor.DarkYellow;
-                        Console.WriteLine("All companies:");
-                        companyService.ShowAll();
-                        Console.ResetColor();
-                        Console.Write("Enter company name: ");
-                        string? companyName = Console.ReadLine();
-                        departmentService.Create(departmentName, departmentAbout, employeeLimit, companyName);
-                    }
-                    catch (Exception ex)
+                    if (companyService.CompanyExist() == false)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine(ex.Message);
+                        Console.WriteLine("There is no any created company!\n" +
+                                          $"First create company please");
                         Console.ResetColor();
-                        goto case (int)Menu.CreateDep;
+                        goto case (int)Menu.CreateComp;
+                    }
+                    else
+                    {
+                        try
+                        {
+                            Console.Write("Enter department name: ");
+                            string? departmentName = Console.ReadLine();
+                            Console.WriteLine("Write about department:");
+                            string? departmentAbout = Console.ReadLine();
+                            Console.Write("Enter employee limit: ");
+                            int employeeLimit = Convert.ToInt32(Console.ReadLine());
+                            Console.ForegroundColor = ConsoleColor.DarkYellow;
+                            Console.WriteLine("All companies:");
+                            companyService.ShowAll();
+                            Console.ResetColor();
+                            Console.Write("Enter company name: ");
+                            string? companyName = Console.ReadLine();
+                            departmentService.Create(departmentName, departmentAbout, employeeLimit, companyName);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine(ex.Message);
+                            Console.ResetColor();
+                            goto case (int)Menu.CreateDep;
+                        }
                     }
                     break;
                 case (int)Menu.AddEmployee:
@@ -218,6 +239,7 @@ while (AppRun)
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("There is no any employee created!");
                         Console.ResetColor();
+                        goto case (int)Menu.CreateEmp;
                     }
                     else
                     {
@@ -249,10 +271,10 @@ while (AppRun)
 
                     break;
                 case (int)Menu.ShowEmpOfDep:
-                    if (departmentService.DepExist() == false)
+                    if (departmentService.DepExist() == false || employeeService.EmpExist() == false)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("There is no any departments created");
+                        Console.WriteLine("There is no any departments or employees created");
                         Console.ResetColor();
                     }
                     else
@@ -265,6 +287,9 @@ while (AppRun)
                             Console.ResetColor();
                             Console.Write("Enter department ID: ");
                             int departmentId = Convert.ToInt32(Console.ReadLine());
+                            Console.ForegroundColor = ConsoleColor.DarkYellow;
+                            Console.WriteLine("Employees of department");
+                            Console.ResetColor();
                             departmentService.GetDepartmentEmployees(departmentId);
                         }
                         catch (Exception ex)
@@ -282,6 +307,7 @@ while (AppRun)
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("There is no any department created!");
                         Console.ResetColor();
+                        goto case (int)Menu.CreateDep;
                     }
                     else
                     {
@@ -322,6 +348,7 @@ while (AppRun)
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("There is no any department created!");
                         Console.ResetColor();
+                        goto case (int)Menu.CreateDep;
                     }
                     else
                     {
@@ -350,6 +377,7 @@ while (AppRun)
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("There is no any department created!");
                         Console.ResetColor();
+                        goto case (int)Menu.CreateDep;
                     }
                     else
                     {
@@ -402,35 +430,46 @@ while (AppRun)
                         break;
                     }
                 case (int)Menu.CreateEmp:
-                    try
-                    {
-                        Console.Write("Enter employee name: ");
-                        string? employeeName = Console.ReadLine();
-                        Console.Write("Enter employee surname: ");
-                        string? employeeSurname = Console.ReadLine();
-                        Console.Write("Enter employee age: ");
-                        int employeeAge = Convert.ToInt32(Console.ReadLine());
-                        Console.Write("Enter employee gender: ");
-                        string? gender = Console.ReadLine();
-                        Console.Write("Enter employee role: ");
-                        string? role = Console.ReadLine();
-                        Console.Write("Enter employee salary: ");
-                        decimal salary = Convert.ToDecimal(Console.ReadLine());
-                        Console.ForegroundColor = ConsoleColor.DarkYellow;
-                        Console.WriteLine("All departments: ");
-                        Console.ResetColor();
-                        departmentService.ShowAllDepartments();
-                        Console.Write("Enter department ID: ");
-                        int departmentId = Convert.ToInt32(Console.ReadLine());
-                        employeeService.Create(employeeName, employeeSurname, employeeAge, gender, role, salary, departmentId);
-
-                    }
-                    catch (Exception ex)
+                    if (departmentService.DepExist() == false)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine(ex.Message);
+                        Console.WriteLine("There is no any department created!\n" +
+                                          $"First create department please");
                         Console.ResetColor();
-                        goto case (int)Menu.CreateEmp;
+                        goto case (int)Menu.CreateDep;
+                    }
+                    else
+                    {
+                        try
+                        {
+                            Console.Write("Enter employee name: ");
+                            string? employeeName = Console.ReadLine();
+                            Console.Write("Enter employee surname: ");
+                            string? employeeSurname = Console.ReadLine();
+                            Console.Write("Enter employee age: ");
+                            int employeeAge = Convert.ToInt32(Console.ReadLine());
+                            Console.Write("Enter employee gender: ");
+                            string? gender = Console.ReadLine();
+                            Console.Write("Enter employee role: ");
+                            string? role = Console.ReadLine();
+                            Console.Write("Enter employee salary: ");
+                            decimal salary = Convert.ToDecimal(Console.ReadLine());
+                            Console.ForegroundColor = ConsoleColor.DarkYellow;
+                            Console.WriteLine("All departments: ");
+                            Console.ResetColor();
+                            departmentService.ShowAllDepartments();
+                            Console.Write("Enter department ID: ");
+                            int departmentId = Convert.ToInt32(Console.ReadLine());
+                            employeeService.Create(employeeName, employeeSurname, employeeAge, gender, role, salary, departmentId);
+
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine(ex.Message);
+                            Console.ResetColor();
+                            goto case (int)Menu.CreateEmp;
+                        }
                     }
                     break;
                 case (int)Menu.ChangeEmpDep:
@@ -439,6 +478,7 @@ while (AppRun)
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("There is no any employee created!");
                         Console.ResetColor();
+                        goto case (int)Menu.CreateEmp;
                     }
                     else
                     {
@@ -473,6 +513,7 @@ while (AppRun)
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("There is no any employee created!");
                         Console.ResetColor();
+                        goto case (int)Menu.CreateEmp;
                     }
                     try
                     {
@@ -500,6 +541,7 @@ while (AppRun)
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("There is no any employee created!");
                         Console.ResetColor();
+                        goto case (int)Menu.CreateEmp;
                     }
                     else
                     {
@@ -530,6 +572,7 @@ while (AppRun)
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("There is no any employee created!");
                         Console.ResetColor();
+                        goto case (int)Menu.CreateEmp;
                     }
                     else
                     {
@@ -560,7 +603,7 @@ while (AppRun)
                             Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine("There is no any employee created!");
                             Console.ResetColor();
-
+                            goto case (int)Menu.CreateEmp;
                         }
                         else
                         {
@@ -580,6 +623,10 @@ while (AppRun)
                     break;
                 case 0:
                     AppRun = false;
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.WriteLine("Application closed!\n" +
+                                      $"Press any key to close window...");
+                    Console.ResetColor();
                     break;
             }
         }
@@ -593,7 +640,7 @@ while (AppRun)
     else
     {
         Console.ForegroundColor = ConsoleColor.Red;
-        Console.WriteLine("Please enter only number");
+        Console.WriteLine("Please enter only numbers (0-18)");
         Console.ResetColor();
     }
 }
